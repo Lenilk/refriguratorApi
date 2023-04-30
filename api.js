@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const port = 3000;
+const port = 3000 || process.env.PORT;
 var bodyParser = require('body-parser');
 mongoose.connect("mongodb+srv://Lenilk:0952603272Ln@refriguratorapp.hegckog.mongodb.net/Refrigurator");
 const databased = mongoose.connection;
