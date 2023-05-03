@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const port = 3000 || process.env.PORT;
+const port = 3000;
 var bodyParser = require('body-parser');
 mongoose.connect("mongodb+srv://Lenilk:0952603272Ln@refriguratorapp.hegckog.mongodb.net/Refrigurator");
 const databased = mongoose.connection;
@@ -20,6 +21,7 @@ const InRefrigurator = require("./model/inRefriguratorModel");
 const Want = require("./model/wantModel");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+const multer = require("multer");
 databased.on('error', (error) => {
     console.log(error);
 });

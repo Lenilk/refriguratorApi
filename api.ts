@@ -11,7 +11,7 @@ const InRefrigurator=require("./model/inRefriguratorModel");
 const Want=require("./model/wantModel");
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
+const multer=require("multer")
 
 databased.on('error', (error:Error) => {
     console.log(error)
