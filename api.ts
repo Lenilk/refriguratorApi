@@ -3,12 +3,14 @@ require("dotenv").config();
 const express= require("express");
 const mongoose = require("mongoose");
 const app =express();
-const port =3000;
+const port =8080;
+const host='0.0.0.0';
 var bodyParser = require('body-parser')
 mongoose.connect("mongodb+srv://Lenilk:0952603272Ln@refriguratorapp.hegckog.mongodb.net/Refrigurator");
 const databased = mongoose.connection
 const InRefrigurator=require("./model/inRefriguratorModel");
 const Want=require("./model/wantModel");
+const WantHistory=require("./model/WantHistory")
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 const multer=require("multer")
@@ -62,6 +64,22 @@ app.post("/postWant",async(req:Request,res:Response)=>{
         name:req.body.name,
         Amount:req.body.Amount,
         Comment:req.body.Comment
+    })
+    try {
+        const dataToSave =  await data.save();
+        res.status(200).json(dataToSave)
+    }
+    catch (error:any) {
+        res.status(400).json({message: error.message})
+    }
+})
+
+app.post("/WantHistory",async(req:Request,res:Response)=>{
+    const data= WantHistory({
+        name:req.body.name,
+        Amount:req.body.Amount,
+        Comment:req.body.Comment,
+        isDelete:req.body.isDelete
     })
     try {
         const dataToSave =  await data.save();
@@ -129,6 +147,6 @@ app.patch('/updateWant/:id', async (req:Request, res:Response) => {
     }
 })
 
-app.listen(port,()=>{
+app.listen(port,host,()=>{
     console.log(`start in ${port}`);
 })
