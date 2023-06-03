@@ -9,10 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const port = 3000 || process.env.PORT;
+const port = 3000;
+const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
 var bodyParser = require('body-parser');
 mongoose.connect("mongodb+srv://Lenilk:0952603272Ln@refriguratorapp.hegckog.mongodb.net/Refrigurator");
 const databased = mongoose.connection;
@@ -20,6 +24,9 @@ const InRefrigurator = require("./model/inRefriguratorModel");
 const Want = require("./model/wantModel");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
+var formidable = require('formidable');
+var fs = require('fs');
 databased.on('error', (error) => {
     console.log(error);
 });
@@ -44,6 +51,42 @@ app.get("/getWant", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ message: error.message });
     }
 }));
+app.get("/version", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield fs.readFile("appversion.txt", 'utf-8', (err, data) => __awaiter(void 0, void 0, void 0, function* () {
+        let json = yield JSON.stringify({ "version": data });
+        res.json(json);
+        console.log(data);
+    }));
+}));
+app.get("/updatePage", (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.write('<form action="updateApp" method="post" enctype="multipart/form-data">');
+    res.write('<input type="text" name="version" placeholder="version"><br>');
+    res.write('<input type="file" name="filetoupload"><br>');
+    res.write('<input type="submit">');
+    res.write('</form>');
+    return res.end();
+});
+app.post("/updateApp", (req, res) => {
+    var form = formidable({ multiples: true });
+    console.log(form);
+    form.parse(req, function (err, fields, files) {
+        var oldpath = files.filetoupload.filepath;
+        var version = fields["version"];
+        var newpath = path.join(__dirname + "/App/" + files.filetoupload.originalFilename);
+        fs.rename(oldpath, newpath, function (err) {
+            if (err)
+                throw err;
+            res.write('File uploaded and moved!');
+            res.end();
+        });
+        fs.writeFile('appversion.txt', String(version), function (err) {
+            if (err)
+                throw err;
+            console.log('Saved!');
+        });
+    });
+});
 app.post("/postRf", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = InRefrigurator({
         name: req.body.name,
