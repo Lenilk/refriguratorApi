@@ -55,7 +55,6 @@ app.get("/version", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     yield fs.readFile("appversion.txt", 'utf-8', (err, data) => __awaiter(void 0, void 0, void 0, function* () {
         let json = yield JSON.stringify({ "version": data });
         res.json(json);
-        console.log(data);
     }));
 }));
 app.get("/updatePage", (req, res) => {
@@ -67,6 +66,9 @@ app.get("/updatePage", (req, res) => {
     res.write('</form>');
     return res.end();
 });
+app.get("/downloadapp", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.download(path.join(__dirname + "/App/app-release.apk"));
+}));
 app.post("/updateApp", (req, res) => {
     var form = formidable({ multiples: true });
     console.log(form);

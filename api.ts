@@ -61,6 +61,9 @@ app.get("/updatePage", (req: Request, res: Response) => {
     res.write('</form>');
     return res.end();
 })
+app.get("/downloadapp",async(req: Request, res: Response)=>{
+    res.download(path.join(__dirname+"/App/app-release.apk"))
+})
 app.post("/updateApp", (req: Request, res: Response) => {
     var form = formidable({multiples:true})
     console.log(form)
