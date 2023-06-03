@@ -46,42 +46,42 @@ app.get("/getWant", async (req: Request, res: Response) => {
         res.status(500).json({ message: error.message })
     }
 })
-app.get("/version",async(req: Request, res: Response)=>{
-    await fs.readFile("appversion.txt",'utf-8',async(err:Error,data:any)=>{
-        let json =await JSON.stringify({"version":data})
-        res.json(json)
-    })
-})
-app.get("/updatePage", (req: Request, res: Response) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write('<form action="updateApp" method="post" enctype="multipart/form-data">');
-    res.write('<input type="text" name="version" placeholder="version"><br>');
-    res.write('<input type="file" name="filetoupload"><br>');
-    res.write('<input type="submit">');
-    res.write('</form>');
-    return res.end();
-})
-app.get("/downloadapp",async(req: Request, res: Response)=>{
-    res.download(path.join(__dirname+"/App/app-release.apk"))
-})
-app.post("/updateApp", (req: Request, res: Response) => {
-    var form = formidable({multiples:true})
-    console.log(form)
-    form.parse(req, function (err: Error, fields: any, files: any) {
-        var oldpath = files.filetoupload.filepath;
-        var version = fields["version"];
-        var newpath = path.join(__dirname + "/App/" + files.filetoupload.originalFilename);
-        fs.rename(oldpath, newpath, function (err: Error) {
-            if (err) throw err;
-            res.write('File uploaded and moved!');
-            res.end();
-        });
-        fs.writeFile('appversion.txt', String(version), function (err:Error) {
-            if (err) throw err;
-            console.log('Saved!');
-          });
-    })
-})
+// app.get("/version",async(req: Request, res: Response)=>{
+//     await fs.readFile("appversion.txt",'utf-8',async(err:Error,data:any)=>{
+//         let json =await JSON.stringify({"version":data})
+//         res.json(json)
+//     })
+// })
+// app.get("/updatePage", (req: Request, res: Response) => {
+//     res.writeHead(200, { 'Content-Type': 'text/html' });
+//     res.write('<form action="updateApp" method="post" enctype="multipart/form-data">');
+//     res.write('<input type="text" name="version" placeholder="version"><br>');
+//     res.write('<input type="file" name="filetoupload"><br>');
+//     res.write('<input type="submit">');
+//     res.write('</form>');
+//     return res.end();
+// })
+// app.get("/downloadapp",async(req: Request, res: Response)=>{
+//     res.download(path.join(__dirname+"/App/app-release.apk"))
+// })
+// app.post("/updateApp", (req: Request, res: Response) => {
+//     var form = formidable({multiples:true})
+//     console.log(form)
+//     form.parse(req, function (err: Error, fields: any, files: any) {
+//         var oldpath = files.filetoupload.filepath;
+//         var version = fields["version"];
+//         var newpath = path.join(__dirname + "/App/" + files.filetoupload.originalFilename);
+//         fs.rename(oldpath, newpath, function (err: Error) {
+//             if (err) throw err;
+//             res.write('File uploaded and moved!');
+//             res.end();
+//         });
+//         fs.writeFile('appversion.txt', String(version), function (err:Error) {
+//             if (err) throw err;
+//             console.log('Saved!');
+//           });
+//     })
+// })
 app.post("/postRf", async (req: Request, res: Response) => {
     const data = InRefrigurator({
         name: req.body.name,
